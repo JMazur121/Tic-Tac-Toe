@@ -17,7 +17,7 @@ public class GameModel {
     public GameModel() {
         players = new Player[2];
         this.players[0] = new Player();
-        this.players[1] = new Player(6);
+        this.players[1] = new Player(7);
     }
 
     public void initCurrent(){

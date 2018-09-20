@@ -42,6 +42,8 @@ public class TicTacState extends GameState {
         if ((board[4] == Character.HUMAN) || (board[8] == Character.HUMAN) || (board[12] == Character.HUMAN) ||
                 (board[16] == Character.HUMAN) || (board[20] == Character.HUMAN))
             val--;
+        if (canAIWin())
+            val += 24;
         return val;
     }
 
@@ -83,12 +85,29 @@ public class TicTacState extends GameState {
             return checkDiagonals();
     }
 
+    private boolean canAIWin() {
+        if (rowsWinning())
+            return true;
+        else if (columnsWinning())
+            return true;
+        return diagonalsWinning();
+    }
+
     private boolean checkRows() {
         for (int i = 0; i < 25; i += 5) {
             Character character = board[i];
             if (character == Character.NONE)
                 continue;
             if ((board[i + 1] == character) && (board[i + 2] == character) && (board[i + 3] == character) && (board[i + 4] == character))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean rowsWinning() {
+        for (int i = 0; i < 25; i += 5) {
+            if (board[i] == Character.AI && (board[i + 1] == Character.AI) && (board[i + 2] == Character.AI) &&
+                    (board[i + 3] == Character.AI) && (board[i + 4] == Character.AI))
                 return true;
         }
         return false;
@@ -103,6 +122,23 @@ public class TicTacState extends GameState {
                 return true;
         }
         return false;
+    }
+
+    private boolean columnsWinning() {
+        for (int i = 0; i < 5; i++) {
+            if (board[i] == Character.AI && (board[i + 5] == Character.AI) && (board[i + 10] == Character.AI) &&
+                    (board[i + 15] == Character.AI) && (board[i + 20] == Character.AI))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean diagonalsWinning() {
+        if (board[0] == Character.AI && (board[6] == Character.AI)
+                && (board[12] == Character.AI) && (board[18] == Character.AI) && (board[24] == Character.AI))
+            return true;
+        return (board[4] == Character.AI && board[8] == Character.AI) && (board[12] == Character.AI)
+                && (board[16] == Character.AI) && (board[20] == Character.AI);
     }
 
     private boolean checkDiagonals() {
