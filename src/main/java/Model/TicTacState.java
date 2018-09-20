@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TicTacState extends GameState {
+
     private Character board[];
-    private int x,y;
+    private int x, y;
 
     public TicTacState() {
         board = new Character[25];
@@ -15,7 +16,7 @@ public class TicTacState extends GameState {
     }
 
     public TicTacState(TicTacState other) {
-        this.board = other.board.clone();
+        this.board = Arrays.copyOfRange(other.board, 0, other.board.length);
     }
 
     public void setHumanMove(int index) {
@@ -25,14 +26,14 @@ public class TicTacState extends GameState {
     @Override
     public int valuate() {
         int val = 12;
-        for (int row = 0; row < 25; row+=5) {
-            if ((board[row] == Character.HUMAN) || (board[row+1] == Character.HUMAN) || (board[row+2] == Character.HUMAN)
-                    || (board[row+3] == Character.HUMAN) || (board[row+4] == Character.HUMAN))
+        for (int row = 0; row < 25; row += 5) {
+            if ((board[row] == Character.HUMAN) || (board[row + 1] == Character.HUMAN) || (board[row + 2] == Character.HUMAN)
+                    || (board[row + 3] == Character.HUMAN) || (board[row + 4] == Character.HUMAN))
                 val--;
         }
         for (int col = 0; col < 5; col++) {
-            if ((board[col] == Character.HUMAN) || (board[col+5] == Character.HUMAN) || (board[col+10] == Character.HUMAN)
-                    || (board[col+15] == Character.HUMAN) || (board[col+20] == Character.HUMAN))
+            if ((board[col] == Character.HUMAN) || (board[col + 5] == Character.HUMAN) || (board[col + 10] == Character.HUMAN)
+                    || (board[col + 15] == Character.HUMAN) || (board[col + 20] == Character.HUMAN))
                 val--;
         }
         if ((board[0] == Character.HUMAN) || (board[6] == Character.HUMAN) || (board[12] == Character.HUMAN) ||
@@ -54,12 +55,13 @@ public class TicTacState extends GameState {
                     newState.board[i] = Character.AI;
                 else
                     newState.board[i] = Character.HUMAN;
-                newState.x = i%5;
-                newState.y = (i-x)/5;
+                newState.x = i % 5;
+                newState.y = (i - x) / 5;
                 gameStates.add(newState);
             }
         }
-        return gameStates.toArray(new GameState[gameStates.size()]);
+        GameState[] states = new GameState[gameStates.size()];
+        return gameStates.toArray(states);
     }
 
     public int getX() {
@@ -82,8 +84,10 @@ public class TicTacState extends GameState {
     }
 
     private boolean checkRows() {
-        for (int i = 0; i < 25; i+=5) {
+        for (int i = 0; i < 25; i += 5) {
             Character character = board[i];
+            if (character == Character.NONE)
+                continue;
             if ((board[i + 1] == character) && (board[i + 2] == character) && (board[i + 3] == character) && (board[i + 4] == character))
                 return true;
         }
@@ -93,6 +97,8 @@ public class TicTacState extends GameState {
     private boolean checkColumns() {
         for (int i = 0; i < 5; i++) {
             Character character = board[i];
+            if (character == Character.NONE)
+                continue;
             if ((board[i + 5] == character) && (board[i + 10] == character) && (board[i + 15] == character) && (board[i + 20] == character))
                 return true;
         }
@@ -101,12 +107,14 @@ public class TicTacState extends GameState {
 
     private boolean checkDiagonals() {
         Character character = board[0];
+        if (character == Character.NONE)
+            return false;
         if ((board[6] == character) && (board[12] == character) && (board[18] == character) && (board[24] == character))
             return true;
         character = board[4];
-        if ((board[8] == character) && (board[12] == character) && (board[16] == character) && (board[20] == character))
-            return true;
-        return false;
+        if (character == Character.NONE)
+            return false;
+        return (board[8] == character) && (board[12] == character) && (board[16] == character) && (board[20] == character);
     }
 
     public void print() {
@@ -124,4 +132,5 @@ public class TicTacState extends GameState {
         }
         System.out.println();
     }
+
 }

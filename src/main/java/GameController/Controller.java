@@ -20,6 +20,7 @@ public class Controller {
 
     public Controller(WindowController windowController) {
         this.windowController = windowController;
+        boardLock = true;
         currentState = new SimpleObjectProperty<>(State.INIT);
         initAIService();
         addStateListener();
@@ -58,8 +59,10 @@ public class Controller {
                 this.windowController.setInfo("Gra zakończyła się remisem");
                 boardLock = true;
             }
-            else if (newValue == State.PLAYER_1_WIN || newValue == State.PLAYER_2_WIN)
+            else if (newValue == State.PLAYER_1_WIN || newValue == State.PLAYER_2_WIN) {
                 System.out.println("Ktoś wygrał");
+                boardLock = true;
+            }
             else {
                 if (newValue == State.PLAYER_1_MOVE || newValue == State.PLAYER_2_MOVE) {
                     System.out.println("Zmienione old:"+oldValue+" new:"+newValue);
